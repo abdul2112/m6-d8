@@ -1,114 +1,59 @@
-import { Router } from 'express';
+import express from 'express';
+import models from '../../db/index.js';
+const Author = models.Author;
+const authorsRouter = express.Router();
 
-import Model from '../../utils/model/index.js';
+authorsRouter
+  .route('/')
+  .post(async (req, res, next) => {
+    try {
+      const data = await Author.create(req.body);
+      res.send(data);
+    } catch (e) {
+      console.log(e);
+    }
+  })
+  .get(async (req, res, next) => {
+    try {
+      const data = await Author.findAll();
+      res.send(data);
+    } catch (e) {
+      console.log(e);
+    }
+  });
 
-const authorsRouter = Router();
-
-const Authors = new Model('authors', 'author_id');
-
-authorsRouter.post('/', async (req, res, next) => {
-  try {
-    const dbResponse = await Authors.create(req.body);
-    res.send(dbResponse);
-    console.log(req.body);
-  } catch (error) {
-    console.log(error);
-    res.status(error.code || 500).send({ error: error.message });
-  }
-});
-
-authorsRouter.get('/', async (req, res, next) => {
-  try {
-    const dbResponse = await Authors.find(
-      req.query,
-      'author_id, name, surname, avatar'
-    );
-    res.send(dbResponse);
-  } catch (error) {
-    console.log(error);
-    res.status(error.code || 500).send({ error: error.message });
-  }
-});
-
-authorsRouter.get('/:id', async (req, res, next) => {
-  try {
-    const dbResponse = await Authors.findById(req.params.id);
-    res.send(dbResponse);
-  } catch (error) {
-    console.log(error);
-    res.status(error.code || 500).send({ error: error.message });
-  }
-});
-
-authorsRouter.put('/:id', async (req, res, next) => {
-  try {
-    const dbResponse = await Authors.update(req.params.id, req.body);
-    res.send(dbResponse);
-    console.log(req.body);
-  } catch (error) {
-    console.log(error);
-    res.status(error.code || 500).send({ error: error.message });
-  }
-});
-
-authorsRouter.delete('/:id', async (req, res, next) => {
-  try {
-    const dbResponse = await Authors.deleteById(req.params.id);
-    res.send(dbResponse);
-    console.log(req.body);
-  } catch (error) {
-    console.log(error);
-    res.status(error.code || 500).send({ error: error.message });
-  }
-});
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// route.post('/:tutor_id/module/:module_id', async (req, res, next) => {
-//   try {
-//     const { tutor_id, module_id } = req.params;
-//     const dbResponse = await query(
-//       `INSERT INTO tutor_modules(tutor_id,module_id) VALUES('${tutor_id}','${module_id}')`
-//     );
-//     res.send(dbResponse);
-//   } catch (error) {
-//     res.status(error.code || 500).send({ error: error.message });
-//   }
-// });
-
-// route.get('/:id/author', async (req, res, next) => {
-//   try {
-//     const dbResponse = await query(`SELECT
-//     relation.module_id,
-//     m.name AS module_name ,
-//     relation.tutor_id,
-//     t.name AS tutor_name,
-//     t.last_name AS tutor_last_name
-//       FROM tutor_modules
-//       AS relation
-//       INNER JOIN tutors AS t ON relation.tutor_id=t.tutor_id
-//       INNER JOIN modules AS m ON relation.module_id=m.module_id
-//       WHERE t.tutor_id=${req.params.id}
-//   `);
-//     res.send(dbResponse);
-//   } catch (error) {
-//     res.status(error.code || 500).send({ error: error.message });
-//   }
-// });
-
-// route.delete('/:tutor_id/module/:module_id', async (req, res, next) => {
-//   try {
-//     const { tutor_id, module_id } = req.params;
-//     const dbResponse = await query(
-//       `DELETE FROM tutor_modules WHERE tutor_id=${tutor_id} AND module_id=${module_id}`
-//     );
-//     res.send(dbResponse);
-//   } catch (error) {
-//     res.status(error.code || 500).send({ error: error.message });
-//   }
-// });
+authorsRouter
+  .route('/:id')
+  .get(async (req, res, next) => {
+    try {
+      const data = await Author.findByPk(req.params.id);
+      res.send(data);
+    } catch (e) {
+      console.log(e);
+    }
+  })
+  .put(async (req, res, next) => {
+    try {
+      const data = await Author.update(req.body, {
+        where: { id: req.params.id },
+        returning: true,
+      });
+      res.send(data[1][0]);
+    } catch (e) {
+      console.log(e);
+    }
+  })
+  .delete(async (req, res, next) => {
+    try {
+      const row = await Author.destroy({ where: { id: req.params.id } });
+      if (row > 0) {
+        res.send('ok');
+      } else {
+        res.status(404).send('Not found');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
 
 export default authorsRouter;

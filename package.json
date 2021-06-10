@@ -27,7 +27,9 @@
     "http-errors": "^1.8.0",
     "mongoose": "^5.12.12",
     "pg": "^8.6.0",
-    "query-to-mongo": "^0.10.1"
+    "pg-hstore": "^2.3.4",
+    "query-to-mongo": "^0.10.1",
+    "sequelize": "^6.6.2"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",
