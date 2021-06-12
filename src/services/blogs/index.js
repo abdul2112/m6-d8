@@ -18,7 +18,10 @@ blogsRouter
   })
   .get(async (req, res, next) => {
     try {
-      const data = await Blog.findAll({ include: Author });
+      const data = await Blog.findAll({
+        order: [['id', 'ASC']],
+        include: Author,
+      });
       res.send(data);
       console.log(req.body);
     } catch (e) {
@@ -30,7 +33,9 @@ blogsRouter
   .route('/:id')
   .get(async (req, res, next) => {
     try {
-      const data = await Blog.findByPk(req.params.id, { include: Author });
+      const data = await Blog.findByPk(req.params.id, {
+        include: Author,
+      });
       res.send(data);
     } catch (e) {
       console.log(e);
@@ -51,7 +56,7 @@ blogsRouter
     try {
       const row = await Blog.destroy({ where: { id: req.params.id } });
       if (row > 0) {
-        res.send('ok');
+        res.send('Blog has been DELETED');
       } else {
         res.status(404).send('Not found');
       }

@@ -37,12 +37,7 @@ const models = {
 
 // This is a oneToMany relationship
 // One Author has many Blogs, while each Blog belongs to a single Author.
-// models.Author.hasMany(models.Blog);
-// models.Blog.belongsTo(models.Author);
-
-sequelize
-  .authenticate()
-  .then(() => console.log('Connection established'))
-  .catch((e) => console.log(e));
+models.Author.hasMany(models.Blog);
+models.Blog.belongsTo(models.Author);
 
 export default models;

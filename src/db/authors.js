@@ -2,8 +2,8 @@ export default (sequelize, DataTypes) => {
   const AuthorModel = sequelize.define('author', {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
       primaryKey: true,
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.TEXT,

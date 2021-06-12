@@ -15,7 +15,10 @@ authorsRouter
   })
   .get(async (req, res, next) => {
     try {
-      const data = await Author.findAll();
+      const data = await Author.findAll({
+        order: [['id', 'ASC']],
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      });
       res.send(data);
     } catch (e) {
       console.log(e);
@@ -26,7 +29,9 @@ authorsRouter
   .route('/:id')
   .get(async (req, res, next) => {
     try {
-      const data = await Author.findByPk(req.params.id);
+      const data = await Author.findByPk(req.params.id, {
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      });
       res.send(data);
     } catch (e) {
       console.log(e);
@@ -47,7 +52,7 @@ authorsRouter
     try {
       const row = await Author.destroy({ where: { id: req.params.id } });
       if (row > 0) {
-        res.send('ok');
+        res.send('Author has been DELETED');
       } else {
         res.status(404).send('Not found');
       }

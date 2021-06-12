@@ -18,7 +18,7 @@ const BlogModel = (sequelize, DataTypes) => {
       allowNull: false,
     },
     read_time_value: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     read_time_unit: {
